@@ -109,7 +109,7 @@ class Square extends React.Component {
         status = 'Next player: ' +
         (this.state.xIsNext ? 'X' : 'O');
       }
-      const reverceButton = 'ASC <=> DESC'
+      const reverceButton = 'ASC <> DESC'
       return (
         <div className="game">
           <div className="game-board">
