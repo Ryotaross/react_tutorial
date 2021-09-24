@@ -52,6 +52,7 @@ class Square extends React.Component {
         }],
         stepNumber: 0,
         xIsNext: true,
+        isASC:true,
       }
     }
     handleClick(i){
@@ -65,6 +66,8 @@ class Square extends React.Component {
         this.setState({
           history:history.concat([{
               squares:squares,
+              col:(i % 3) + 1,
+              row:Math.floor(i / 3) + 1,
           }]),
           stepNumber:history.length,
           xIsNext: !this.state.xIsNext,
@@ -76,6 +79,11 @@ class Square extends React.Component {
         xIsNext:(step % 2) === 0,
       })
     }
+    handleReverce(){
+      this.setState({
+        isASC: !this.state.isASC,
+      })
+    }
     render() {
       const history = this.state.history;
       const current = history[this.state.stepNumber];
@@ -83,12 +91,14 @@ class Square extends React.Component {
 
       const moves = history.map((step,move) => {
         const desc = move ?
-          'Go to move #' + move :
+          'Go to move #' + move + '(col:' + step.col + ',row:' + step.row + ')' :
           'Go to game start';
         return(
           <li key={move}>
             <button onClick={() =>
-            this.jumpTo(move)}>{desc}</button>
+            this.jumpTo(move)}>
+              {move === this.state.stepNumber ? <strong>{desc}</strong> : desc}
+            </button>
           </li>
         ) 
       })
@@ -99,6 +109,7 @@ class Square extends React.Component {
         status = 'Next player: ' +
         (this.state.xIsNext ? 'X' : 'O');
       }
+      const reverceButton = 'ASC <=> DESC'
       return (
         <div className="game">
           <div className="game-board">
@@ -108,7 +119,8 @@ class Square extends React.Component {
           </div>
           <div className="game-info">
             <div>{ status }</div>
-            <ol>{ moves }</ol>
+            <div><button onClick={() => this.handleReverce()}>{reverceButton}</button></div>
+            <ol>{this.state.isASC ? moves : moves.reverse() }</ol>
           </div>
         </div>
       );
