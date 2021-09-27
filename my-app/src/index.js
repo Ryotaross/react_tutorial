@@ -151,9 +151,7 @@ class Square extends React.Component {
         return { player: squares[a], line: [a, b, c] };
       }
     }
-    if(!squares.includes(null)){
-      return 'draw'
-    }
+   
     return null;
   }
   
