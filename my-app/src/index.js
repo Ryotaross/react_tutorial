@@ -5,7 +5,7 @@ import './index.css';
 class Square extends React.Component {
     render() {
       return (
-        <button className="square" 
+        <button className={this.props.isHighlight ? `square highlight-color` : `square`}
          onClick={() => {this.props.onClick()}}>
           {this.props.value}
         </button>
@@ -17,7 +17,9 @@ class Square extends React.Component {
     renderSquare(i) {
       return <Square 
               value={this.props.squares[i]}
-              onClick={() => this.props.onClick(i)}/>;
+              onClick={() => this.props.onClick(i)}
+              isHighlight={ this.props.winline.includes(i) }
+              key={i}/>;
     }
   
     render() {
@@ -103,8 +105,12 @@ class Square extends React.Component {
         ) 
       })
       let status;
+      let winline = [];
       if(winner){
-        status = 'Winner: ' + winner;
+        status = 'Winner: ' + winner.player;
+        winline = winner.line;
+      }else if(winner === 'draw'){
+        status = 'Draw!'
       }else{
         status = 'Next player: ' +
         (this.state.xIsNext ? 'X' : 'O');
@@ -115,7 +121,8 @@ class Square extends React.Component {
           <div className="game-board">
             <Board 
               squares={current.squares}
-              onClick={(i) => this.handleClick(i)}/>
+              onClick={(i) => this.handleClick(i)}
+              winline={winline}/>
           </div>
           <div className="game-info">
             <div>{ status }</div>
@@ -141,8 +148,11 @@ class Square extends React.Component {
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
+        return { player: squares[a], line: [a, b, c] };
       }
+    }
+    if(!squares.includes(null)){
+      return 'draw'
     }
     return null;
   }
